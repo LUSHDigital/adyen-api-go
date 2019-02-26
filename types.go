@@ -26,7 +26,7 @@ type Address struct {
 }
 
 /*******
-* Card *
+* Cards *
 *******/
 
 // Card structure representation
@@ -36,6 +36,15 @@ type Card struct {
 	ExpireYear  string `json:"expiryYear"`
 	Cvc         string `json:"cvc"`
 	HolderName  string `json:"holderName"`
+}
+
+// SecuredFieldsCard structure representation
+type SecuredFieldsCard struct {
+	Type                  string `json:"type"`
+	EncryptedCardNumber   string `json:"encryptedCardNumber"`
+	EncryptedExpiryMonth  string `json:"encryptedExpiryMonth"`
+	EncryptedExpiryYear   string `json:"encryptedExpiryYear"`
+	EncryptedSecurityCode string `json:"encryptedSecurityCode"`
 }
 
 /*******

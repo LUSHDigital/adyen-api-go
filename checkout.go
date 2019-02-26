@@ -76,14 +76,70 @@ type PaymentMethodCard struct {
 
 // Payment will create a payment within the checkout service
 type Payment struct {
-	// TODO: Implement the plethora of payment request parameters
+	AdditionalData     *AdditionalData    `json:"additionalData,omitempty"`
+	Amount             *Amount            `json:"amount" valid:"required"`
+	BillingAddress     *Address           `json:"billingAddress,omitempty"`
+	DeliveryAddress    *Address           `json:"deliveryAddress,omitempty"`
+	Reference          string             `json:"reference"`
+	MerchantAccount    string             `json:"merchantAccount" valid:"required"`
+	ReturnURL          string             `json:"returnUrl" valid:"required"`
+	ShopperReference   string             `json:"shopperReference,omitempty"`
+	Recurring          *Recurring         `json:"recurring,omitempty"`
+	ShopperInteraction string             `json:"shopperInteraction,omitempty"`
+	BrowserInfo        *BrowserInfo       `json:"browserInfo,omitempty"`
+	PaymentMethod      *SecuredFieldsCard `json:"paymentMethod" valid:"required"`
+	ShopperEmail       string             `json:"shopperEmail,omitempty"`
+	ShopperIP          string             `json:"shopperIP,omitempty"`
+	ShopperLocale      string             `json:"shopperLocale,omitempty"`
+	Channel            string             `json:"channel"`
 }
 
+// PaymentResponse
 type PaymentResponse struct {
-	// TODO: Implement the plethora of payment response parameters
+	ResultCode        string                            `json:"resultCode"`
+	PaymentData       string                            `json:"paymentData"`
+	Redirect          *PaymentRedirectResponse          `json:"redirect"`
+	Details           *[]PaymentRedirectDetailsResponse `json:"details"`
+	RefusalReason     string                            `json:"refusalReason"`
+	RefusalReasonCode string                            `json:"refusalReasonCode"`
+	PSPReference      string                            `json:"pspReference"`
+	// TODO: Implement the rest of the payment response parameters
 }
 
-// PaymentDetails 
+// PaymentRedirectResponse
+type PaymentRedirectResponse struct {
+	Data   *PaymentRedirectDataResponse `json:"data"`
+	Method string                       `json:"method"`
+	URL    string                       `json:"url"`
+}
+
+// PaymentRedirectDataResponse
+type PaymentRedirectDataResponse struct {
+	PaReq   string `json:"PaReq"`
+	TermUrl string `json:"TermUrl"`
+	MD      string `json:"MD"`
+}
+
+// PaymentRedirectDetailsResponse
+type PaymentRedirectDetailsResponse struct {
+	Key  string `json:"key"`
+	Type string `json:"type"`
+}
+
+// PaymentFraudResultResponse
+type PaymentFraudResultResponse struct {
+	AccountScore string                             `json:"accountScore"`
+	Results      *PaymentFraudResultResultsResponse `json:"results"`
+}
+
+// PaymentFraudResultResultsResponse
+type PaymentFraudResultResultsResponse struct {
+	AccountScore int    `json:"accountScore"`
+	CheckId      int    `json:"checkId"`
+	Name         string `json:"name"`
+}
+
+// PaymentDetails
 type PaymentDetails struct {
 	PaymentData string      `json:"paymentData"`
 	Details     interface{} `json:"details"` // TODO: Discover the type of the input details. This will be included in PaymentResponse
