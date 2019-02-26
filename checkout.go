@@ -73,3 +73,29 @@ type PaymentMethodCard struct {
 	HolderName  string `json:"holderName"`
 	Number      string `json:"number"`
 }
+
+// Payment will create a payment within the checkout service
+type Payment struct {
+	// TODO: Implement the plethora of payment request parameters
+}
+
+type PaymentResponse struct {
+	// TODO: Implement the plethora of payment response parameters
+}
+
+// PaymentDetails 
+type PaymentDetails struct {
+	PaymentData string      `json:"paymentData"`
+	Details     interface{} `json:"details"` // TODO: Discover the type of the input details. This will be included in PaymentResponse
+}
+
+// PaymentDetailsResponse will give you the result of submitting details on a payment
+// TODO: Extend this fore all result data
+type PaymentDetailsResponse struct {
+	Status    int    `json:"status"`
+	ErrorCode string `json:"errorCode"`
+	ErrorType string `json:"errorType"`
+	Message   string `json:"message"`
+
+	ResultCode string `json:"resultCode"`
+}

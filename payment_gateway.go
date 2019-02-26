@@ -19,6 +19,8 @@ const skipHppURL = "skipDetails"
 // authorise3DType - authorise type request, @TODO: move to enums
 const authorise3DType = "authorise3d"
 
+const paymentsType = "payments"
+
 // AuthoriseEncrypted - Perform authorise payment in Adyen
 //
 // To perform recurring payment, AuthoriseEncrypted need to have contract specified and shopperReference

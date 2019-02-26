@@ -29,7 +29,7 @@ const (
 	RecurringService = "Recurring"
 
 	// CheckoutAPIVersion - API version of current checkout API
-	CheckoutAPIVersion = "v32"
+	CheckoutAPIVersion = "v41"
 )
 
 // Adyen - base structure with configuration options
@@ -245,9 +245,4 @@ func (a *Adyen) Modification() *ModificationGateway {
 // Recurring - returns RecurringGateway
 func (a *Adyen) Recurring() *RecurringGateway {
 	return &RecurringGateway{a}
-}
-
-// Checkout - returns CheckoutGateway
-func (a *Adyen) Checkout() *CheckoutGateway {
-	return &CheckoutGateway{a}
 }

@@ -150,3 +150,22 @@ func (r *Response) paymentMethods() (*PaymentMethodsResponse, error) {
 
 	return &a, nil
 }
+
+
+func (r *Response) payment() (*PaymentResponse, error) {
+	var a *PaymentResponse
+	if err := json.Unmarshal(r.Body, a); err != nil {
+		return nil, err
+	}
+
+	return a, nil
+}
+
+func (r *Response) paymentDetails() (*PaymentDetailsResponse, error) {
+	var a *PaymentDetailsResponse
+	if err := json.Unmarshal(r.Body, a); err != nil {
+		return nil, err
+	}
+
+	return a, nil
+}
