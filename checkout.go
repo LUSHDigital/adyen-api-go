@@ -141,8 +141,8 @@ type PaymentFraudResultResultsResponse struct {
 
 // PaymentDetails
 type PaymentDetails struct {
-	PaymentData string      `json:"paymentData"`
-	Details     interface{} `json:"details"` // TODO: Discover the type of the input details. This will be included in PaymentResponse
+	PaymentData string                            `json:"paymentData"`
+	Details     *[]PaymentRedirectDetailsResponse `json:"details"`
 }
 
 // PaymentDetailsResponse will give you the result of submitting details on a payment
