@@ -29,7 +29,7 @@ const (
 	RecurringService = "Recurring"
 
 	// CheckoutAPIVersion - API version of current checkout API
-	CheckoutAPIVersion = "v41"
+	CheckoutAPIVersion = "v40"
 )
 
 // Adyen - base structure with configuration options
