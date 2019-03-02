@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 // APIError - handle error (non 200 status) response from Adyen
@@ -151,8 +153,8 @@ func (r *Response) paymentMethods() (*PaymentMethodsResponse, error) {
 	return &a, nil
 }
 
-
 func (r *Response) payment() (*PaymentResponse, error) {
+	spew.Dump(r)
 	var a *PaymentResponse
 	if err := json.Unmarshal(r.Body, a); err != nil {
 		return nil, err

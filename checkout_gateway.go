@@ -1,5 +1,7 @@
 package adyen
 
+import "github.com/davecgh/go-spew/spew"
+
 const (
 	paymentMethodsURL = "paymentMethods"
 	paymentURL        = "payments"
@@ -38,6 +40,7 @@ func (g *CheckoutGateway) Payment(req *Payment) (*PaymentResponse, error) {
 	url := g.checkoutURL(paymentURL, g.version)
 
 	resp, err := g.execute(url, req)
+	spew.Dump(resp)
 	if err != nil {
 		return nil, err
 	}
