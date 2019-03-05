@@ -30,7 +30,8 @@ func TestMain(m *testing.M) {
 func TestNewWithTimeout(t *testing.T) {
 	const timeout = time.Second * 123
 
-	act := New(Testing, &APICredentials{
+	act := New(&APICredentials{
+		Env:      Testing,
 		Username: "un",
 	}, WithTimeout(timeout))
 	equals(t, timeout, act.client.Timeout)
@@ -39,7 +40,8 @@ func TestNewWithTimeout(t *testing.T) {
 func TestNewWithCurrency(t *testing.T) {
 	const currency = "USD"
 
-	act := New(Testing, &APICredentials{
+	act := New(&APICredentials{
+		Env:      Testing,
 		Username: "un",
 	}, WithCurrency(currency))
 	equals(t, currency, act.Currency)
@@ -57,7 +59,8 @@ func TestNewWithCustomOptions(t *testing.T) {
 		a.MerchantAccount = merchant
 	}
 
-	act := New(Testing, &APICredentials{
+	act := New(&APICredentials{
+		Env:      Testing,
 		Username: "un",
 	}, f1, f2)
 	equals(t, merchant, act.MerchantAccount)
@@ -94,8 +97,8 @@ func getHTTPMockInstance(host string) *Adyen {
 	}
 
 	instance := New(
-		env,
 		&APICredentials{
+			Env:    env,
 			APIKey: os.Getenv("ADYEN_API_KEY"),
 		},
 	)
@@ -104,18 +107,21 @@ func getHTTPMockInstance(host string) *Adyen {
 }
 func getTestInstance() *Adyen {
 	instance := New(
-		Testing,
 		&APICredentials{
+			Env:    Testing,
 			APIKey: os.Getenv("ADYEN_API_KEY"),
 		}, )
 
 	return instance
 }
 func getTestHMACInstance() *Adyen {
-	instance := NewHMAC(
-		Testing,
-		os.Getenv("ADYEN_API_KEY"),
-		os.Getenv("ADYEN_HMAC"),
+	instance := New(
+		&APICredentials{
+			Env:      Testing,
+			Username: os.Getenv("ADYEN_USERNAME"),
+			Password: os.Getenv("ADYEN_PASSWORD"),
+			HMAC:     os.Getenv("ADYEN_HMAC"),
+		},
 	)
 
 	return instance

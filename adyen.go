@@ -17,7 +17,7 @@ const (
 	DefaultClientTimeout = time.Second * 10
 
 	// PaymentAPIVersion - API version of current payment API
-	PaymentAPIVersion = "v30"
+	PaymentAPIVersion = "v40"
 
 	// RecurringAPIVersion - API version of current recurring API
 	RecurringAPIVersion = "v25"
@@ -29,7 +29,7 @@ const (
 	RecurringService = "Recurring"
 
 	// CheckoutAPIVersion - API version of current checkout API
-	CheckoutAPIVersion = "v40"
+	CheckoutAPIVersion = "v41"
 )
 
 // Adyen - base structure with configuration options
@@ -58,14 +58,15 @@ type Adyen struct {
 //     - opts - an optional collection of functions that allow you to tweak configurations.
 //
 // You can create new API user there: https://ca-test.adyen.com/ca/ca/config/users.shtml
-func NewHMAC(env Environment, apiKey string, HMAC string, opts ...Option) *Adyen {
+func NewHMAC(env Environment, username, password string, HMAC string, opts ...Option) *Adyen {
 	creds := &APICredentials{
-		Env:    env,
-		APIKey: apiKey,
-		HMAC:   HMAC,
+		Env:      env,
+		Username: username,
+		Password: password,
+		HMAC:     HMAC,
 	}
 
-	return New(env, creds, opts...)
+	return New(creds, opts...)
 }
 
 // NewWithCredentials - create new Adyen instance with pre-configured credentials.
@@ -77,9 +78,7 @@ func NewHMAC(env Environment, apiKey string, HMAC string, opts ...Option) *Adyen
 //     - opts - an optional collection of functions that allow you to tweak configurations.
 //
 // New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
-func New(env Environment, creds *APICredentials, opts ...Option) *Adyen {
-	creds.Env = env
-
+func New(creds *APICredentials, opts ...Option) *Adyen {
 	a := Adyen{
 		Credentials: creds,
 		Currency:    DefaultCurrency,
@@ -153,6 +152,7 @@ func (a *Adyen) executeBasicAuth(url string, request interface{}) (*Response, er
 		return nil, err
 	}
 
+	req.Header.Set("Content-Type", "application/json")
 	req.SetBasicAuth(a.Credentials.Username, a.Credentials.Password)
 
 	resp, err := a.client.Do(req)
@@ -170,7 +170,6 @@ func (a *Adyen) executeBasicAuth(url string, request interface{}) (*Response, er
 	if _, err = buf.ReadFrom(resp.Body); err != nil {
 		return nil, err
 	}
-
 
 	r := &Response{
 		Response: resp,
@@ -219,7 +218,6 @@ func (a *Adyen) executeApiKey(url string, requestEntity interface{}) (r *Respons
 	if _, err = buf.ReadFrom(resp.Body); err != nil {
 		return nil, err
 	}
-
 
 	r = &Response{
 		Response: resp,
