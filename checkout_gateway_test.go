@@ -1,6 +1,8 @@
 package adyen
 
 import (
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
 )
@@ -11,14 +13,26 @@ import (
 func TestPaymentMethods(t *testing.T) {
 	t.Parallel()
 
-	instance := getTestInstance()
+	// Mock the Adyen checkout paymentMethods endpoint
+	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(`{
+  "paymentMethods":[
+    {
+      "details": null,
+      "name":"Credit Card",
+      "type":"scheme"
+    }
+  ]
+}`))
+	}))
+
+	instance := getHTTPMockInstance(s.URL)
 
 	request := &PaymentMethods{
 		MerchantAccount: os.Getenv("ADYEN_ACCOUNT"),
 	}
 
-	_, err := instance.Checkout().PaymentMethods(request)
-
+	resp, err := instance.Checkout().PaymentMethods(request)
 	knownError, ok := err.(APIError)
 	if ok {
 		t.Errorf("Response should be succesfull. Known API Error: Code - %s, Message - %s, Type - %s", knownError.ErrorCode, knownError.Message, knownError.ErrorType)
@@ -26,5 +40,12 @@ func TestPaymentMethods(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("Response should be succesfull, error - %s", err.Error())
+	}
+
+	if resp.PaymentMethods[0].Name != "Credit Card" {
+		t.Errorf("expected %s, received %s", "Credit Card", resp.PaymentMethods[0].Name)
+	}
+	if resp.PaymentMethods[0].Type != "scheme" {
+		t.Errorf("expected %s, received %s", "scheme", resp.PaymentMethods[0].Type)
 	}
 }

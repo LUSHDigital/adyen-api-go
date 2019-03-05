@@ -16,7 +16,7 @@ const (
 func (a *RecurringGateway) ListRecurringDetails(req *RecurringDetailsRequest) (*RecurringDetailsResult, error) {
 	url := a.adyenURL(RecurringService, listRecurringDetailsType, RecurringAPIVersion)
 
-	resp, err := a.execute(url, req)
+	resp, err := a.executeBasicAuth(url, req)
 
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func (a *RecurringGateway) ListRecurringDetails(req *RecurringDetailsRequest) (*
 func (a *RecurringGateway) DisableRecurring(req *RecurringDisableRequest) (*RecurringDisableResponse, error) {
 	url := a.adyenURL(RecurringService, disableRecurringType, RecurringAPIVersion)
 
-	resp, err := a.execute(url, req)
+	resp, err := a.executeBasicAuth(url, req)
 
 	if err != nil {
 		return nil, err

@@ -42,7 +42,7 @@ const (
 // Currency and MerchantAccount should be used only to store the data and be able to use it later.
 // Requests won't be automatically populated with given values
 type Adyen struct {
-	Credentials     apiCredentials
+	Credentials     *APICredentials
 	Currency        string
 	MerchantAccount string
 
@@ -54,32 +54,18 @@ type Adyen struct {
 // Description:
 //
 //     - env - Environment for next API calls
-//     - username - API username for authentication
-//     - password - API password for authentication
+//     - apiKey - The issued Authentication key
 //     - opts - an optional collection of functions that allow you to tweak configurations.
 //
 // You can create new API user there: https://ca-test.adyen.com/ca/ca/config/users.shtml
-func New(env Environment, username, password string, opts ...Option) *Adyen {
-	creds := makeCredentials(env, username, password)
-	return NewWithCredentials(env, creds, opts...)
-}
+func NewHMAC(env Environment, apiKey string, HMAC string, opts ...Option) *Adyen {
+	creds := &APICredentials{
+		Env:    env,
+		APIKey: apiKey,
+		HMAC:   HMAC,
+	}
 
-// NewWithHMAC - create new Adyen instance with HPP credentials
-//
-// Use this constructor when you need to use Adyen HPP API.
-//
-// Description:
-//
-//     - env - Environment for next API calls
-//     - username - API username for authentication
-//     - password - API password for authentication
-//     - hmac - is generated when new Skin is created in Adyen Customer Area
-//     - opts - an optional collection of functions that allow you to tweak configurations.
-//
-// New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
-func NewWithHMAC(env Environment, username, password, hmac string, opts ...Option) *Adyen {
-	creds := makeCredentialsWithHMAC(env, username, password, hmac)
-	return NewWithCredentials(env, creds, opts...)
+	return New(env, creds, opts...)
 }
 
 // NewWithCredentials - create new Adyen instance with pre-configured credentials.
@@ -87,11 +73,13 @@ func NewWithHMAC(env Environment, username, password, hmac string, opts ...Optio
 // Description:
 //
 //     - env - Environment for next API calls
-//     - credentials - configured apiCredentials to use when interacting with Adyen.
+//     - credentials - configured APICredentials to use when interacting with Adyen.
 //     - opts - an optional collection of functions that allow you to tweak configurations.
 //
 // New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
-func NewWithCredentials(env Environment, creds apiCredentials, opts ...Option) *Adyen {
+func New(env Environment, creds *APICredentials, opts ...Option) *Adyen {
+	creds.Env = env
+
 	a := Adyen{
 		Credentials: creds,
 		Currency:    DefaultCurrency,
@@ -154,11 +142,53 @@ func (a *Adyen) checkoutURL(requestType, apiVersion string) string {
 	return a.Credentials.Env.CheckoutURL(requestType, apiVersion)
 }
 
-// execute request on Adyen side, transforms "requestEntity" into JSON representation
+func (a *Adyen) executeBasicAuth(url string, request interface{}) (*Response, error) {
+	body, err := json.Marshal(request)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(body))
+	if err != nil {
+		return nil, err
+	}
+
+	req.SetBasicAuth(a.Credentials.Username, a.Credentials.Password)
+
+	resp, err := a.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		if cerr := resp.Body.Close(); cerr != nil {
+			err = cerr
+		}
+	}()
+
+	buf := new(bytes.Buffer)
+	if _, err = buf.ReadFrom(resp.Body); err != nil {
+		return nil, err
+	}
+
+
+	r := &Response{
+		Response: resp,
+		Body:     buf.Bytes(),
+	}
+
+	if err = r.handleHTTPError(); err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
+// executeApiKey request on Adyen side, transforms "requestEntity" into JSON representation
 //
 // internal method to do a request to Adyen API endpoint
 // request Type: POST, request body format - JSON
-func (a *Adyen) execute(url string, requestEntity interface{}) (r *Response, err error) {
+func (a *Adyen) executeApiKey(url string, requestEntity interface{}) (r *Response, err error) {
 	body, err := json.Marshal(requestEntity)
 	if err != nil {
 		return nil, err
@@ -170,12 +200,15 @@ func (a *Adyen) execute(url string, requestEntity interface{}) (r *Response, err
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.SetBasicAuth(a.Credentials.Username, a.Credentials.Password)
+
+	// TODO: Some requests require an api key header, some require basic auth.
+	req.Header.Set("X-API-Key", a.Credentials.APIKey)
 
 	resp, err := a.client.Do(req)
 	if err != nil {
 		return nil, err
 	}
+
 	defer func() {
 		if cerr := resp.Body.Close(); cerr != nil {
 			err = cerr
@@ -186,6 +219,7 @@ func (a *Adyen) execute(url string, requestEntity interface{}) (r *Response, err
 	if _, err = buf.ReadFrom(resp.Body); err != nil {
 		return nil, err
 	}
+
 
 	r = &Response{
 		Response: resp,

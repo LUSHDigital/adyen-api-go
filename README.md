@@ -131,16 +131,13 @@ env, err := adyen.ProductionEnvironment("5409c4fd1cc98a4e", "AcmeAccount123")
 
 ```
 $ export ADYEN_CLIENT_TOKEN="YOUR_ADYEN_CLIENT_TOKEN"
-$ export ADYEN_USERNAME="YOUR_ADYEN_API_USERNAME"
-$ export ADYEN_PASSWORD="YOUR_API_PASSWORD"
+$ export ADYEN_API_KEY="YOUR_ADYEN_API_KEY"
 $ export ADYEN_ACCOUNT="YOUR_MERCHANT_ACCOUNT"
 ```
 
 Settings explanation:
 * ADYEN_CLIENT_TOKEN - Library token in Adyen, used to load external JS file from Adyen to validate Credit Card information
-* ADYEN_USERNAME - Adyen API username, usually starts with ws@
-* ADYEN_PASSWORD - Adyen API password for username
-* ADYEN_ACCOUNT - Selected Merchant Account
+* ADYEN_API_KEY - API Key for your application
 
 ## Hosted Payment Pages
 

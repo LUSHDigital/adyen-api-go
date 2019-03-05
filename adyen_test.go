@@ -30,14 +30,18 @@ func TestMain(m *testing.M) {
 func TestNewWithTimeout(t *testing.T) {
 	const timeout = time.Second * 123
 
-	act := New(Testing, "un", "pw", WithTimeout(timeout))
+	act := New(Testing, &APICredentials{
+		Username: "un",
+	}, WithTimeout(timeout))
 	equals(t, timeout, act.client.Timeout)
 }
 
 func TestNewWithCurrency(t *testing.T) {
 	const currency = "USD"
 
-	act := New(Testing, "un", "pw", WithCurrency(currency))
+	act := New(Testing, &APICredentials{
+		Username: "un",
+	}, WithCurrency(currency))
 	equals(t, currency, act.Currency)
 }
 
@@ -53,7 +57,9 @@ func TestNewWithCustomOptions(t *testing.T) {
 		a.MerchantAccount = merchant
 	}
 
-	act := New(Testing, "un", "pw", f1, f2)
+	act := New(Testing, &APICredentials{
+		Username: "un",
+	}, f1, f2)
 	equals(t, merchant, act.MerchantAccount)
 	equals(t, currency, act.Currency)
 	equals(t, timeout, act.client.Timeout)
@@ -79,23 +85,38 @@ func assert(tb *testing.T, cond bool, message string) {
 	}
 }
 
-// getTestInstance - instanciate adyen for tests
-func getTestInstance() *Adyen {
+func getHTTPMockInstance(host string) *Adyen {
+	env := Environment{
+		apiURL:      host,
+		clientURL:   host,
+		hppURL:      host,
+		checkoutURL: host,
+	}
+
 	instance := New(
-		Testing,
-		os.Getenv("ADYEN_USERNAME"),
-		os.Getenv("ADYEN_PASSWORD"))
+		env,
+		&APICredentials{
+			APIKey: os.Getenv("ADYEN_API_KEY"),
+		},
+	)
 
 	return instance
 }
-
-// getTestInstanceWithHPP - instanciate adyen for tests
-func getTestInstanceWithHPP() *Adyen {
-	instance := NewWithHMAC(
+func getTestInstance() *Adyen {
+	instance := New(
 		Testing,
-		os.Getenv("ADYEN_USERNAME"),
-		os.Getenv("ADYEN_PASSWORD"),
-		os.Getenv("ADYEN_HMAC"))
+		&APICredentials{
+			APIKey: os.Getenv("ADYEN_API_KEY"),
+		}, )
+
+	return instance
+}
+func getTestHMACInstance() *Adyen {
+	instance := NewHMAC(
+		Testing,
+		os.Getenv("ADYEN_API_KEY"),
+		os.Getenv("ADYEN_HMAC"),
+	)
 
 	return instance
 }

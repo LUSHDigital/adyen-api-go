@@ -19,7 +19,7 @@ type ModificationGateway struct {
 func (a *ModificationGateway) Capture(req *Capture) (*CaptureResponse, error) {
 	url := a.adyenURL(PaymentService, captureType, PaymentAPIVersion)
 
-	resp, err := a.execute(url, req)
+	resp, err := a.executeBasicAuth(url, req)
 
 	if err != nil {
 		return nil, err
@@ -32,7 +32,7 @@ func (a *ModificationGateway) Capture(req *Capture) (*CaptureResponse, error) {
 func (a *ModificationGateway) Cancel(req *Cancel) (*CancelResponse, error) {
 	url := a.adyenURL(PaymentService, cancelType, PaymentAPIVersion)
 
-	resp, err := a.execute(url, req)
+	resp, err := a.executeBasicAuth(url, req)
 
 	if err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func (a *ModificationGateway) Cancel(req *Cancel) (*CancelResponse, error) {
 func (a *ModificationGateway) CancelOrRefund(req *Cancel) (*CancelOrRefundResponse, error) {
 	url := a.adyenURL(PaymentService, cancelOrRefundType, PaymentAPIVersion)
 
-	resp, err := a.execute(url, req)
+	resp, err := a.executeBasicAuth(url, req)
 
 	if err != nil {
 		return nil, err
@@ -59,7 +59,7 @@ func (a *ModificationGateway) CancelOrRefund(req *Cancel) (*CancelOrRefundRespon
 func (a *ModificationGateway) Refund(req *Refund) (*RefundResponse, error) {
 	url := a.adyenURL(PaymentService, refundType, PaymentAPIVersion)
 
-	resp, err := a.execute(url, req)
+	resp, err := a.executeBasicAuth(url, req)
 
 	if err != nil {
 		return nil, err
@@ -74,7 +74,7 @@ func (a *ModificationGateway) Refund(req *Refund) (*RefundResponse, error) {
 func (a *ModificationGateway) AdjustAuthorisation(req *AdjustAuthorisation) (*AdjustAuthorisationResponse, error) {
 	url := a.adyenURL(PaymentService, adjustAuthorisation, PaymentAPIVersion)
 
-	resp, err := a.execute(url, req)
+	resp, err := a.executeBasicAuth(url, req)
 
 	if err != nil {
 		return nil, err
@@ -89,7 +89,7 @@ func (a *ModificationGateway) AdjustAuthorisation(req *AdjustAuthorisation) (*Ad
 func (a *ModificationGateway) TechnicalCancel(req *TechnicalCancel) (*TechnicalCancelResponse, error) {
 	url := a.adyenURL(PaymentService, technicalCancel, PaymentAPIVersion)
 
-	resp, err := a.execute(url, req)
+	resp, err := a.executeBasicAuth(url, req)
 
 	if err != nil {
 		return nil, err

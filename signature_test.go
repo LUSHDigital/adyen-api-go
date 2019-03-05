@@ -11,7 +11,7 @@ import (
 func TestSignatureCalculateSignature(t *testing.T) {
 	t.Parallel()
 
-	instance := getTestInstanceWithHPP()
+	instance := getTestHMACInstance()
 
 	req := DirectoryLookupRequest{
 		CurrencyCode:      "EUR",
@@ -42,7 +42,7 @@ func TestSignatureCalculateSignature(t *testing.T) {
 func TestSignatureCalculateSignatureForSkipHppRequest(t *testing.T) {
 	t.Parallel()
 
-	instance := getTestInstanceWithHPP()
+	instance := getTestHMACInstance()
 
 	req := SkipHppRequest{
 		MerchantReference: "DE-100100GMWJGS",

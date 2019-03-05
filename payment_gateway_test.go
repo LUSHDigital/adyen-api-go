@@ -12,7 +12,7 @@ import (
 func TestAuthoriseFailed(t *testing.T) {
 	t.Parallel()
 
-	instance := getTestInstance()
+	instance := getTestHMACInstance()
 
 	authRequest := &Authorise{
 		Card: &Card{
@@ -47,7 +47,7 @@ func TestAuthoriseFailed(t *testing.T) {
 func TestAuthorise(t *testing.T) {
 	t.Parallel()
 
-	instance := getTestInstance()
+	instance := getTestHMACInstance()
 
 	authRequest := &Authorise{
 		Card: &Card{
@@ -66,7 +66,6 @@ func TestAuthorise(t *testing.T) {
 	}
 
 	response, err := instance.Payment().Authorise(authRequest)
-
 	knownError, ok := err.(APIError)
 	if ok {
 		t.Errorf("Response should be succesfull. Known API Error: Code - %s, Message - %s, Type - %s", knownError.ErrorCode, knownError.Message, knownError.ErrorType)
@@ -76,8 +75,11 @@ func TestAuthorise(t *testing.T) {
 		t.Errorf("Response should be succesfull, error - %s", err.Error())
 	}
 
-	responseBytes, err := json.Marshal(response)
+	if response == nil {
+		t.Fatal("nil-response nor error")
+	}
 
+	responseBytes, err := json.Marshal(response)
 	if err != nil {
 		t.Error("Response can't be converted to JSON")
 	}
@@ -95,7 +97,7 @@ func TestAuthorise(t *testing.T) {
 func TestDirectoryLookUpMissingData(t *testing.T) {
 	t.Parallel()
 
-	instance := getTestInstance()
+	instance := getTestHMACInstance()
 
 	timeIn := time.Now().Local().Add(time.Minute * time.Duration(60))
 
@@ -123,7 +125,7 @@ func TestDirectoryLookUpMissingData(t *testing.T) {
 func TestDirectoryLookUp(t *testing.T) {
 	t.Parallel()
 
-	instance := getTestInstanceWithHPP()
+	instance := getTestHMACInstance()
 
 	timeIn := time.Now().Local().Add(time.Minute * time.Duration(60))
 

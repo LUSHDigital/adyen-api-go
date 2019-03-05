@@ -27,7 +27,7 @@ func (a *Adyen) Checkout() *CheckoutGateway {
 func (g *CheckoutGateway) PaymentMethods(req *PaymentMethods) (*PaymentMethodsResponse, error) {
 	url := g.checkoutURL(paymentMethodsURL, g.version)
 
-	resp, err := g.execute(url, req)
+	resp, err := g.executeApiKey(url, req)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func (g *CheckoutGateway) PaymentMethods(req *PaymentMethods) (*PaymentMethodsRe
 func (g *CheckoutGateway) Payment(req *Payment) (*PaymentResponse, error) {
 	url := g.checkoutURL(paymentURL, g.version)
 
-	resp, err := g.execute(url, req)
+	resp, err := g.executeApiKey(url, req)
 	spew.Dump(resp)
 	if err != nil {
 		return nil, err
@@ -52,7 +52,7 @@ func (g *CheckoutGateway) Payment(req *Payment) (*PaymentResponse, error) {
 func (g *CheckoutGateway) PaymentDetails(req *PaymentDetails) (*PaymentDetailsResponse, error) {
 	url := g.checkoutURL(paymentDetailsURL, g.version)
 
-	resp, err := g.execute(url, req)
+	resp, err := g.executeApiKey(url, req)
 	if err != nil {
 		return nil, err
 	}

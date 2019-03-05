@@ -39,8 +39,7 @@ const paymentsType = "payments"
 func (a *PaymentGateway) AuthoriseEncrypted(req *AuthoriseEncrypted) (*AuthoriseResponse, error) {
 	url := a.adyenURL(PaymentService, authoriseType, PaymentAPIVersion)
 
-	resp, err := a.execute(url, req)
-
+	resp, err := a.executeBasicAuth(url, req)
 	if err != nil {
 		return nil, err
 	}
@@ -58,8 +57,7 @@ func (a *PaymentGateway) AuthoriseEncrypted(req *AuthoriseEncrypted) (*Authorise
 func (a *PaymentGateway) Authorise(req *Authorise) (*AuthoriseResponse, error) {
 	url := a.adyenURL(PaymentService, authoriseType, PaymentAPIVersion)
 
-	resp, err := a.execute(url, req)
-
+	resp, err := a.executeBasicAuth(url, req)
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +112,7 @@ func (a *PaymentGateway) GetHPPRedirectURL(req *SkipHppRequest) (string, error) 
 func (a *PaymentGateway) Authorise3D(req *Authorise3D) (*AuthoriseResponse, error) {
 	url := a.adyenURL(PaymentService, authorise3DType, PaymentAPIVersion)
 
-	resp, err := a.execute(url, req)
+	resp, err := a.executeBasicAuth(url, req)
 
 	if err != nil {
 		return nil, err
