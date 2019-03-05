@@ -23,7 +23,7 @@ var Testing = Environment{
 	apiURL:      "https://pal-test.adyen.com/pal/servlet",
 	clientURL:   "https://test.adyen.com/hpp/cse/js/",
 	hppURL:      "https://test.adyen.com/hpp/",
-	checkoutURL: "https://checkout-test.adyen.com/services/PaymentSetupAndVerification",
+	checkoutURL: "https://checkout-test.adyen.com/",
 }
 
 // Production - instance of production environment
@@ -31,7 +31,7 @@ var Production = Environment{
 	apiURL:      "https://%s-%s-pal-live.adyenpayments.com/pal/servlet",
 	clientURL:   "https://live.adyen.com/hpp/cse/js/",
 	hppURL:      "https://live.adyen.com/hpp/",
-	checkoutURL: "https://%s-%s-checkout-live.adyenpayments.com/services/PaymentSetupAndVerification",
+	checkoutURL: "https://checkoutshopper-live.adyen.com/",
 }
 
 // TestEnvironment returns test environment configuration.
@@ -68,5 +68,5 @@ func (e Environment) HppURL(request string) string {
 
 // CheckoutURL returns the full URL to a Checkout API endpoint.
 func (e Environment) CheckoutURL(service string, version string) string {
-	return e.checkoutURL + "/" + version + "/" + service
+	return fmt.Sprintf("%s/%s/%s", e.checkoutURL, version, service)
 }
