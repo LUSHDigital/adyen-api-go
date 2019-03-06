@@ -48,13 +48,6 @@ func (g *CheckoutGateway) Payment(req *Payment) (*PaymentResponse, error) {
 		return nil, err
 	}
 
-	log.Println("ADYEN URL:")
-	spew.Dump(url)
-	log.Println("TO ADYEN REQ:")
-	spew.Dump(req)
-	log.Println("ADYEN RESP:")
-	spew.Dump(resp)
-
 	return resp.payment()
 }
 

@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-
-	"github.com/davecgh/go-spew/spew"
 )
 
 // APIError - handle error (non 200 status) response from Adyen
@@ -123,39 +121,38 @@ func (r *Response) directoryLookup() (*DirectoryLookupResponse, error) {
 
 // listRecurringDetails  - generate Adyen List Recurring Details response
 func (r *Response) listRecurringDetails() (*RecurringDetailsResult, error) {
-	var a RecurringDetailsResult
-	if err := json.Unmarshal(r.Body, &a); err != nil {
+	a := &RecurringDetailsResult{}
+	if err := json.Unmarshal(r.Body, a); err != nil {
 		return nil, err
 	}
 
-	return &a, nil
+	return a, nil
 }
 
 // disableRecurring  - generate Adyen disable recurring
 //
 // Link - https://docs.adyen.com/developers/api-reference/recurring-api#disableresult
 func (r *Response) disableRecurring() (*RecurringDisableResponse, error) {
-	var a RecurringDisableResponse
-	if err := json.Unmarshal(r.Body, &a); err != nil {
+	a := &RecurringDisableResponse{}
+	if err := json.Unmarshal(r.Body, a); err != nil {
 		return nil, err
 	}
 
-	return &a, nil
+	return a, nil
 }
 
 // paymentMethods - generate Adyen CheckoutAPI paymentMethods response.
 func (r *Response) paymentMethods() (*PaymentMethodsResponse, error) {
-	var a PaymentMethodsResponse
-	if err := json.Unmarshal(r.Body, &a); err != nil {
+	a := &PaymentMethodsResponse{}
+	if err := json.Unmarshal(r.Body, a); err != nil {
 		return nil, err
 	}
 
-	return &a, nil
+	return a, nil
 }
 
 func (r *Response) payment() (*PaymentResponse, error) {
-	spew.Dump(r)
-	var a *PaymentResponse
+	a := &PaymentResponse{}
 	if err := json.Unmarshal(r.Body, a); err != nil {
 		return nil, err
 	}
@@ -164,7 +161,7 @@ func (r *Response) payment() (*PaymentResponse, error) {
 }
 
 func (r *Response) paymentDetails() (*PaymentDetailsResponse, error) {
-	var a *PaymentDetailsResponse
+	a := &PaymentDetailsResponse{}
 	if err := json.Unmarshal(r.Body, a); err != nil {
 		return nil, err
 	}
