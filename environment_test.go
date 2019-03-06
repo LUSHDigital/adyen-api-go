@@ -115,7 +115,7 @@ func TestCheckoutURLEnvironmentProduction(t *testing.T) {
 	}
 
 	act := env.CheckoutURL("service", "version")
-	exp := "https://5409c4fd1cc98a4e-AcmeAccount123-checkout-live.adyenpayments.com/services/PaymentSetupAndVerification/version/service"
+	exp := "https://5409c4fd1cc98a4e-AcmeAccount123-checkout-live.adyenpayments.com/checkout/services/PaymentSetupAndVerification/version/service"
 
 	equals(t, exp, act)
 }

@@ -1,11 +1,5 @@
 package adyen
 
-import (
-	"log"
-
-	"github.com/davecgh/go-spew/spew"
-)
-
 const (
 	paymentMethodsURL = "paymentMethods"
 	paymentURL        = "payments"
