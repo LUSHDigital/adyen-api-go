@@ -168,3 +168,12 @@ func (r *Response) paymentDetails() (*PaymentDetailsResponse, error) {
 
 	return a, nil
 }
+
+func (r *Response) payment3DDetails() (*Payment3DDetailsResponse, error) {
+	a := &Payment3DDetailsResponse{}
+	if err := json.Unmarshal(r.Body, a); err != nil {
+		return nil, err
+	}
+
+	return a, nil
+}

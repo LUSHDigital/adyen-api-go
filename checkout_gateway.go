@@ -46,7 +46,7 @@ func (g *CheckoutGateway) Payment(req *Payment) (*PaymentResponse, error) {
 }
 
 // PaymentDetails submits details for a created payment, such as verifying 3D Secure
-func (g *CheckoutGateway) PaymentDetails(req *PaymentDetails) (*PaymentDetailsResponse, error) {
+func (g *CheckoutGateway) PaymentDetails(req *Payment3DDetails) (*Payment3DDetailsResponse, error) {
 	url := g.checkoutURL(paymentDetailsURL, g.version)
 
 	resp, err := g.executeApiKey(url, req)
@@ -54,5 +54,5 @@ func (g *CheckoutGateway) PaymentDetails(req *PaymentDetails) (*PaymentDetailsRe
 		return nil, err
 	}
 
-	return resp.paymentDetails()
+	return resp.payment3DDetails()
 }

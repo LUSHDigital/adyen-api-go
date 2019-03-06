@@ -111,6 +111,29 @@ type Authorise3D struct {
 	ShopperName     *Name        `json:"shopperName,omitempty"`
 }
 
+// Payment3DDetails response when successfully completed 3D Secure verification.
+//
+// https://docs.adyen.com/developers/payment-methods/cards-with-3d-secure#step4completepayment
+type Payment3DDetails struct {
+	PaymentData string                              `json:"paymentData"`
+	Details     *[]Payment3DRedirectDetailsResponse `json:"details"`
+}
+
+// Payment3DRedirectDetailsResponse
+type Payment3DRedirectDetailsResponse struct {
+	MD    string `json:"MD" valid:"required"`
+	PaRes string `json:"PaRes" valid:"required"`
+}
+
+// Payment3DDetailsResponse will give you the result of submitting details on a 3D payment
+//
+// https://docs.adyen.com/developers/payment-methods/cards-with-3d-secure#step5presentpaymentresult
+// TODO: Extend this fore all result data
+type Payment3DDetailsResponse struct {
+	PspReference string `json:"pspReference"`
+	ResultCode   string `json:"resultCode"`
+}
+
 /*******************
 * Directory lookup *
 *******************/
