@@ -115,8 +115,8 @@ type Authorise3D struct {
 //
 // https://docs.adyen.com/developers/payment-methods/cards-with-3d-secure#step4completepayment
 type Payment3DDetails struct {
-	PaymentData string                              `json:"paymentData"`
-	Details     *[]Payment3DRedirectDetailsResponse `json:"details"`
+	PaymentData string                            `json:"paymentData"`
+	Details     *Payment3DRedirectDetailsResponse `json:"details"`
 }
 
 // Payment3DRedirectDetailsResponse
