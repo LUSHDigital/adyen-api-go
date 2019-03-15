@@ -4,11 +4,8 @@ package adyen
 import (
 	"bytes"
 	"encoding/json"
-	"log"
 	"net/http"
 	"time"
-
-	"github.com/davecgh/go-spew/spew"
 )
 
 const (
@@ -205,13 +202,7 @@ func (a *Adyen) executeApiKey(url string, requestEntity interface{}) (r *Respons
 
 	// TODO: Some requests require an api key header, some require basic auth.
 	req.Header.Set("X-API-Key", a.Credentials.APIKey)
-	log.Println("_____++++++______")
-	log.Printf("req: %+v", req)
-	log.Println()
-	log.Println("_____++++++______")
-	log.Println("_____++++++______")
-	spew.Dump(req)
-	log.Println("_____++++++______")
+
 	resp, err := a.client.Do(req)
 	if err != nil {
 		return nil, err
