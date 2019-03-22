@@ -177,13 +177,3 @@ func (r *Response) payment3DDetails() (*Payment3DDetailsResponse, error) {
 
 	return a, nil
 }
-
-// givexBalance - generate Adyen Givex CheckoutAPI balance request response.
-func (r *Response) givexBalance() (*GivexBalanceResponse, error) {
-	a := &GivexBalanceResponse{}
-	if err := json.Unmarshal(r.Body, a); err != nil {
-		return nil, err
-	}
-
-	return a, nil
-}
